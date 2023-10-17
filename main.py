@@ -8,6 +8,8 @@ from documentation.description import api_description
 
 #Import des routers
 import routers.router_event
+import routers.router_category
+import routers.router_user
 
 
 # Initialisation de l'API
@@ -24,6 +26,10 @@ class Event(BaseModel):
 
 #L'ajout des routers : 
 app.include_router(routers.router_event.router)
+
+app.include_router(routers.router_category.router)
+
+app.include_router(routers.router_user.router)
 
 
 
