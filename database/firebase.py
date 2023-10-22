@@ -13,3 +13,4 @@ if not firebase_admin._apps:
 #firebase_admin.initialize_app(cred)
 
 firebase = pyrebase.initialize_app(firebaseConfig)
+db = firebase.database()
