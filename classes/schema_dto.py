@@ -10,3 +10,7 @@ class Event(BaseModel):
     
 class EventNoID(BaseModel):
     title: str
+
+class User(BaseModel):
+    email: str
+    password: str

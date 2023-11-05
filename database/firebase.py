@@ -1,16 +1,16 @@
 import firebase_admin
-from firebase_admin import credentials
-from configs.firebase_config_example.py import firebaseConfig
 import pyrebase
 
-if not firebase_admin._apps:
+from dotenv import dotenv_values
+import json
+env = dotenv_values(dotenv_path='.env')
 
-    cred = credentials.Certificate("event-calendar-27b62-firebase-adminsdk-6bd1x-c7695f8512.json")
-
+if not firebase_admin._apps :
+    cred = firebase_admin.credentials.Certificate(json.loads(env['FIREBASE_SERVICE_ACCOUNT_KEY']))
     firebase_admin.initialize_app(cred)
 
-#cred = credentials.Certificate("path/to/serviceAccountKey.json")
-#firebase_admin.initialize_app(cred)
-
-firebase = pyrebase.initialize_app(firebaseConfig)
+firebase = pyrebase.initialize_app(json.loads(env['FIREBASE_CONFIG']))
 db = firebase.database()
+
+#authentication
+authStudent = firebase.auth()

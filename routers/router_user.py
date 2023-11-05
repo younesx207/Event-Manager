@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-import uuid
+from fastapi import APIRouter
 from main import Event
 
 
