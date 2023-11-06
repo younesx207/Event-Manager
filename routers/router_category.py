@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-import uuid
-from main import Event
+from classes.schema_dto import Event
 
 router = APIRouter()
 

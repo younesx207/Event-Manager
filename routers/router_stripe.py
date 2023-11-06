@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 import stripe
 from firebase_admin import auth
 from database.firebase import db
-from routers.router_auth import get_current_user
+from routers.router_user import get_current_user
 
 from dotenv import dotenv_values
 import json
