@@ -78,10 +78,8 @@ async def stripe_usage(userData: int = Depends(get_current_user)):
     cust_id = stripe_data["cust_id"]
     return stripe.Invoice.upcoming(customer=cust_id)
 
-def increment_stripe(userId:str):
-    firebase_user = auth.get_user(userId)
-    stripe_data = db.child('users').child(firebase_user.uid).child('stripe').get().val()
+async def increment_stripe(user_data: int):
+    stripe_data = db.child('users').child(user_data['uid']).child('stripe').get(user_data['idToken']).val()
     print(stripe_data.values())
     item_id = stripe_data['item_id']
     stripe.SubscriptionItem.create_usage_record(id=item_id, quantity=1)
-    return

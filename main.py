@@ -6,7 +6,7 @@ from documentation.description import api_description
 #Import des routers
 import routers.router_event
 import routers.router_category
-import routers.router_user
+import routers.router_user 
 import routers.router_stripe
 
 

@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-# Verbs + Endpoints
+#GET Request
 @router.get("/", response_model=list[Event])
 async def get_event(user_data: int= Depends(get_current_user)):
     queryResults = db.child('users').child(user_data['uid']).child("events").get(user_data['idToken']).val()
@@ -20,9 +20,7 @@ async def get_event(user_data: int= Depends(get_current_user)):
     eventarray = [value for value in queryResults.values()]
     return eventarray
 
-# 1. Exercice (10min) Create new Student: POST
-#connecter la vraie DB (10 min)
-#add oauth (10min)
+#POST Request
 @router.post("/", status_code=201, response_model=Event)
 async def create_event(event: EventNoID, user_data: int= Depends(get_current_user)):
     generatedId=str(uuid4())
@@ -31,28 +29,22 @@ async def create_event(event: EventNoID, user_data: int= Depends(get_current_use
     db.child('users').child(user_data['uid']).child("events").child(generatedId).set(data=newEvent.model_dump(), token=user_data['idToken'])
     return newEvent
 
-# 2. Exercice (10min) Student GET by ID
-#connecter la vraie DB (10 min)
-#add oauth (10min)
+#GET By ID Request
 @router.get("/{event_id}", response_model=Event)
 async def get_event_by_id(event_id: str, user_data: int= Depends(get_current_user)):
     queryResult = db.child('users').child(user_data['uid']).child('events').child(event_id).get(user_data['idToken']).val()
     if not queryResult : raise HTTPException(status_code=404, detail="Event not found") 
     return queryResult
 
-# 3. Exercice (10min) PATCH Student (name)
-#connecter la vraie DB (10 min)
-#add oauth (10min)
+#PATCH Request
 @router.patch("/{event_id}", response_model=Event)
 async def event_update(event_id: str, event: EventNoID, user_data: int= Depends(get_current_user)):
     queryResult = db.child('users').child(user_data['uid']).child('events').child(event_id).get(user_data['idToken']).val()
-    if not queryResult : raise HTTPException(status_code=404, detail="Student not found") 
+    if not queryResult : raise HTTPException(status_code=404, detail="Event not found") 
     updatedEvent = Event(id=event_id, **event.model_dump())
     return db.child('users').child(user_data['uid']).child('events').child(event_id).update(data=updatedEvent.model_dump(), token=user_data['idToken'])
 
-# 4. Exercice (10min) DELETE Student
-#connecter la vraie DB (10 min)
-#add oauth (10min)
+#DELETE Request
 @router.delete("/{event_id}", status_code=202, response_model=str)
 async def event_delete(event_id: str, user_data: int= Depends(get_current_user)) :
     queryResult = db.child('users').child(user_data['uid']).child('events').child(event_id).get(user_data['idToken']).val()
@@ -62,6 +54,3 @@ async def event_delete(event_id: str, user_data: int= Depends(get_current_user))
     return "Event deleted"
 
 
-#'Students' auront des 'Attendances' pour des 'Sessions'
-# utilisateurs, lien vers une ressource
-# API vendu à des centre de formations ... 'Center' -> Sessions + Students -> Attendences

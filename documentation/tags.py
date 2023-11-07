@@ -2,10 +2,14 @@
 tags_metadata = [
     {
         "name": "Events",
-        "description": "Create and list events of our API",
+        "description": "Create, list and delete events of our API",
     },
     {
         "name": "Auth",
-        "description": "Authenticate a User"
+        "description": "Authenticate a User",
+    },
+    {
+        "name": "Category",
+        "description": "Create, list and delete categorys of our API events"
     }
 ]
