@@ -39,6 +39,19 @@ async def get_event_by_id(event_id: str, user_data: int= Depends(get_current_use
     if not queryResult : raise HTTPException(status_code=404, detail="Event not found") 
     return queryResult
 
+# #GET Event By Category
+@router.get("/by_category/{category_name}", response_model=list[Event])
+async def get_events_by_category(category_name: str, user_data: int = Depends(get_current_user)):
+    queryResults = db.child('users').child(user_data['uid']).child("events").get(user_data['idToken']).val()
+    if not queryResults:
+        return []
+
+    # Filter events by the specified category
+    filtered_events = [value for value in queryResults.values() if value['category'] == category_name]
+
+    return filtered_events
+
+
 #PATCH Request
 @router.patch("/{event_id}", response_model=Event)
 async def event_update(event_id: str, event: EventNoID, user_data: int= Depends(get_current_user)):

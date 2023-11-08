@@ -12,6 +12,7 @@ You will be able to:
 * Create new event.
 * Get event list.
 * Get an event by ID.
+* Get an event by category
 * Delete an event.
 
 ## Category
