@@ -40,6 +40,13 @@ async def create_category(category: CategoryNoID, user_data: int= Depends(get_cu
     print(categories_names)
     return newCategory
 
+@router.patch("/{category_id}", response_model=Category)
+async def category_update(category_id: str, category: CategoryNoID, user_data: int= Depends(get_current_user)):
+    queryResult = db.child('users').child(user_data['uid']).child('categories').child(category_id).get(user_data['idToken']).val()
+    if not queryResult : raise HTTPException(status_code=404, detail="Category not found") 
+    updatedEvent = Category(id=category_id, **category.model_dump())
+    return db.child('users').child(user_data['uid']).child('categories').child(category_id).update(data=updatedEvent.model_dump(), token=user_data['idToken'])
+
 
 @router.delete("/{category_id}", status_code=202, response_model=str)
 async def category_delete(category_id: str, user_data: int= Depends(get_current_user)) :
