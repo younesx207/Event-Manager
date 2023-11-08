@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from classes.schema_dto import Event, EventNoID
 from database.firebase import db
 from routers.router_user import get_current_user
+from routers.router_category import categories_names
 from routers.router_stripe import increment_stripe
 
 #api init (launch with uvicorn main:api --reload)
@@ -24,7 +25,9 @@ async def get_event(user_data: int= Depends(get_current_user)):
 @router.post("/", status_code=201, response_model=Event)
 async def create_event(event: EventNoID, user_data: int= Depends(get_current_user)):
     generatedId=str(uuid4())
-    newEvent = Event (id=generatedId, title=event.title)
+    if event.category not in categories_names:
+        raise HTTPException(status_code=404, detail="Category does not exist")
+    newEvent = Event (id=generatedId, title=event.title, description=event.description, location=event.location, date_time=event.date_time, category=event.category)
     increment_stripe(user_data['uid'])
     db.child('users').child(user_data['uid']).child("events").child(generatedId).set(data=newEvent.model_dump(), token=user_data['idToken'])
     return newEvent

@@ -1,6 +1,9 @@
 # API Description
 api_description = """
-This is the first version of the Event Calendar API, which is an API that can do the following stuff :
+The Event Calendar API is a purpose-built tool aimed at simplifying event management. Its primary goal is to provide an easy and efficient way to create, categorize, and oversee a wide range of events, catering to the needs of event organizers and participants alike.
+
+
+This is the first version of the Event Calendar API, it can do the following stuff :
 
 ## Event
 
@@ -20,7 +23,10 @@ You will be able to:
 * Delete a category.
 
 ## User 
-You'll be able to signup and login
+* You'll be able to signup and login
+
+
+A stripe configuration is linked to this API (for 9.99$ per month)
 
 
 """
