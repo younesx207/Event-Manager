@@ -5,6 +5,10 @@ client = TestClient(app)
 
 
 def test_docs():
-    res= client.get("/")
+    res= client.get("/docs")
     assert res.status_code == 200
+
+def test_redoc():
+  response = client.get('/redoc')
+  assert response.status_code == 200
 
