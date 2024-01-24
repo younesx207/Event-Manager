@@ -33,8 +33,12 @@ def test_get_events(auth_user):
     assert response.status_code == 200
     assert response.json() == []
 
+def test_get_events_invalid_user(auth_user):
+    response = client.get("/events/", headers={"Authorization": "InvalidToken"})
+    assert response.status_code == 401
+
 # Test POST event
-def test_create_event_valide_category(auth_user, test_event_valide):
+def test_create_event_valid_category(auth_user, test_event_valide):
     category_data = {"name": "Test Category ", "description": "Test Description "}
     reqponse1 = client.post("/categories/", json=category_data, headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
     assert reqponse1.status_code == 201
@@ -43,7 +47,7 @@ def test_create_event_valide_category(auth_user, test_event_valide):
     assert response.json()["title"] == "Test Event"
     return response.json()["id"]
 
-def test_create_event_unvalide_category(auth_user, test_event):
+def test_create_event_unvalid_category(auth_user, test_event):
     response = client.post("/events/", json=test_event, headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
     assert response.status_code == 404
 
@@ -53,7 +57,7 @@ def test_create_event_invalid_user(auth_user, test_event):
 
 # Test GET event by ID
 def test_get_event_by_id(auth_user):
-    event_id = test_create_event_valide_category(auth_user, {
+    event_id = test_create_event_valid_category(auth_user, {
         "title": "Test Event",
         "description": "test",
         "location": "test",
@@ -76,7 +80,7 @@ def test_get_events_by_category(auth_user, test_event_valide):
 
 # Test PATCH event
 def test_update_event(auth_user):
-    event_id = test_create_event_valide_category(auth_user, {
+    event_id = test_create_event_valid_category(auth_user, {
         "title": "Test Event",
         "description": "test",
         "location": "test",
@@ -87,9 +91,14 @@ def test_update_event(auth_user):
     response = client.patch(f"/events/{event_id}", json=update_data, headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
     assert response.status_code == 200
 
+def test_update_event_not_found(auth_user):
+    update_data = {"title": "Updated Event", "description": "test updated", "location": "updated location", "date_time": "2022-01-01T12:00:00", "category": "Test Category "}
+    response = client.patch(f"/events/doesnotexist", json=update_data, headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
+    assert response.status_code == 404
+
 # Test DELETE event
 def test_delete_event(auth_user):
-    event_id = test_create_event_valide_category(auth_user, {
+    event_id = test_create_event_valid_category(auth_user, {
         "title": "Test Event",
         "description": "test",
         "location": "test",
@@ -99,3 +108,8 @@ def test_delete_event(auth_user):
     response = client.delete(f"/events/{event_id}", headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
     assert response.status_code == 202
     assert response.json() == "Event deleted"
+
+def test_delete_event_not_found(auth_user):
+    response = client.delete(f"/events/doesnotexists", headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
+    assert response.status_code == 404
+    assert response.json() == {'detail': 'Event not found'}

@@ -1,7 +1,7 @@
 import json
 from unittest.mock import Mock, patch
 from fastapi.testclient import TestClient
-from main import app  # Assuming your FastAPI app instance is named 'app'
+from main import app
 import pytest
 
 client = TestClient(app)
@@ -10,6 +10,10 @@ def test_get_categories(auth_user):
     response = client.get("/categories/", headers= {'Authorization': f"Bearer {auth_user['access_token']}"})
     assert response.status_code == 200
     assert type(response.json()) is list
+
+def test_get_categories_invalid_user(auth_user):
+    response = client.get("/categories/", headers={"Authorization": "InvalidToken"})
+    assert response.status_code == 401
 
 def test_create_category(auth_user):
     category_data = {"name": "Test Category ", "description": "Test Description "}
